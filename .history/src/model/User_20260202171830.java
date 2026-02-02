@@ -1,0 +1,92 @@
+package model;
+
+/**
+ * Clase que representa un usuario del sistema
+ * @author marionzuloagazapana
+ */
+public class User implements IGeolocalizable {
+    
+    private String id;
+    private String name;
+    private String email;
+    private String phone;
+    private double latitude;
+    private double longitude;
+    
+    /**
+     * Constructor de la clase User
+     * @param id identificador único del usuario
+     * @param name nombre del usuario
+     * @param email correo electrónico del usuario
+     * @param phone teléfono del usuario
+     */
+    public User(String id, String name, String email, String phone) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.latitude = 0.0;
+        this.longitude = 0.0;
+    }
+    
+    // Implementación de IGeolocalizable
+    @Override
+    public double getLatitude() {
+        return latitude;
+    }
+    
+    @Override
+    public double getLongitude() {
+        return longitude;
+    }
+    
+    @Override
+    public void setLocation(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+    
+    // Getters y Setters
+    public String getId() {
+        return id;
+    }
+    
+    public void setId(String id) {
+        this.id = id;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public String getEmail() {
+        return email;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    public String getPhone() {
+        return phone;
+    }
+    
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+    
+    @Override
+    public String toString() {
+        return "User{" + 
+               "id='" + id + '\'' + 
+               ", name='" + name + '\'' + 
+               ", email='" + email + '\'' + 
+               ", phone='" + phone + '\'' + 
+               ", location=(" + latitude + ", " + longitude + ")" + 
+               '}';
+    }
+}
