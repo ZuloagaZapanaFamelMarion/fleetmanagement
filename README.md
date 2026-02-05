@@ -1,11 +1,54 @@
 # Proyecto POO - Sistema de Gestión de Taxis
 
-## Explicacióin del gráfico UML
+## Explicación del gráfico UML
 
 ![WhatsApp Image 2026-02-04 at 21 44 56](https://github.com/user-attachments/assets/24e80c1b-8f79-4012-99d3-c24250d89b66)
 
 
+Diagrama UML: Sistema de Gestión de Flota de Taxis
 
+1) Visión general
+Este diagrama UML representa la arquitectura del Sistema de Gestión de Flota de Taxis. Muestra las clases principales, sus relaciones (herencia e implementación), y cómo se modela el viaje mediante una clase específica.
+
+2) Elementos del diagrama
+Clases abstractas: Vehicle, User
+Clases concretas: Taxi, AdminUser, ClientUser
+Interfaz: IGeolocalizable
+Clase de viaje/ruta: Trajectory
+
+3) Relaciones UML clave
+Herencia (extends):
+Taxi extiende Vehicle
+AdminUser y ClientUser extienden User
+Realización (implements):
+Taxi implementa IGeolocalizable
+User implementa IGeolocalizable (y sus subclases heredan esta capacidad)
+Asociación:
+Trajectory se asocia con Taxi y con User, porque un viaje requiere un taxi asignado y un usuario solicitante.
+
+4) Responsabilidad de cada clase
+Vehicle (abstracta): define atributos comunes del vehículo y obliga a implementar displayInfo() y getVehicleType().
+Taxi: especializa Vehicle, maneja disponibilidad y ubicación (latitud/longitud) y permite calcular distancias.
+IGeolocalizable: contrato de geolocalización con getLatitude(), getLongitude() y setLocation().
+User (abstracta): centraliza datos del usuario, ubicación y define el método abstracto authenticate().
+AdminUser: usuario administrador, con autenticación más estricta y métodos de administración (por ejemplo, generar reportes).
+ClientUser: usuario cliente, con autenticación propia y métodos de uso (por ejemplo, solicitar taxi).
+Trajectory: representa el viaje, almacenando origen, destino, distancia y duración, conectando al User con el Taxi asignado.
+
+5) Flujo típico del sistema
+1. El ClientUser solicita un taxi.
+2. El sistema compara ubicaciones porque User y Taxi cumplen IGeolocalizable.
+3. Se selecciona el taxi disponible más cercano.
+4. Se crea un objeto Trajectory con el usuario, el taxi y los datos de origen/destino; el sistema calcula distancia y duración.
+
+6) Principios de POO reflejados
+Abstracción: Vehicle y User evitan instanciar tipos genéricos y definen contratos.
+Herencia: reutiliza atributos y comportamientos comunes en taxis y usuarios.
+Encapsulamiento: atributos privados/protected y acceso mediante getters/setters.
+Polimorfismo: authenticate() se comporta distinto en AdminUser y ClientUser.
+
+7) Nota de consistencia
+Si en el código los constructores de AdminUser y ClientUser reciben id, el diagrama UML debe reflejarlo para mantener consistencia entre diseño y implementación.
 
 ## Estructura del Proyecto
 
