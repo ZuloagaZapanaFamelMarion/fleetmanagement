@@ -1,5 +1,11 @@
 # Proyecto POO - Sistema de Gestión de Taxis
 
+## Explicacióin del gráfico UML
+
+
+
+![Uploading image.png…]()
+
 ## Estructura del Proyecto
 
 ```
@@ -25,7 +31,7 @@
 
 
 
-## Explicacióin del gráfico UML
+
 
 ## 🚀 Pasos para Implementar el Proyecto
 
