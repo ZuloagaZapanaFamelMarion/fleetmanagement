@@ -1,6 +1,6 @@
 # Proyecto POO - Sistema de Gestión de Taxis
 
-## 📋 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 /proyecto-poo-taxi
@@ -21,7 +21,11 @@
 │
 ├── README.md
 └── build.xml (proyecto NetBeans con Ant)
-```
+
+
+
+
+## Explicacióin del gráfico UML
 
 ## 🚀 Pasos para Implementar el Proyecto
 
