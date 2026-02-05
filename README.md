@@ -10,7 +10,8 @@ Diagrama UML: Sistema de Gestión de Flota de Taxis
 1) Visión general
 Este diagrama UML representa la arquitectura del Sistema de Gestión de Flota de Taxis. Muestra las clases principales, sus relaciones (herencia e implementación), y cómo se modela el viaje mediante una clase específica.
 
-2) Elementos del diagrama
+2) Elementos del diagrama<img width="10176" height="6210" alt="deepseek_mermaid_20260205_6c01c8" src="https://github.com/user-attachments/assets/e6a6b3c1-983f-41d1-a812-64010a823251" />
+
 Clases abstractas: Vehicle, User
 Clases concretas: Taxi, AdminUser, ClientUser
 Interfaz: IGeolocalizable
