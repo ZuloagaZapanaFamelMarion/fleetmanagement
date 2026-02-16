@@ -1,0 +1,154 @@
+classDiagram
+    %% Interfaz
+    class IGeolocalizable {
+        <<interface>>
+        +double getLatitude()
+        +double getLongitude()
+        +void setLocation(double latitude, double longitude)
+    }
+
+    %% Clases del modelo - Jerarquía de Usuarios
+    class User {
+        <<abstract>>
+        -Long id
+        -String name
+        -String email
+        -double latitude
+        -double longitude
+        +User(Long id, String name, String email)
+        +Long getId()
+        +void setId(Long id)
+        +String getName()
+        +void setName(String name)
+        +String getEmail()
+        +void setEmail(String email)
+        +double getLatitude()
+        +double getLongitude()
+        +void setLocation(double latitude, double longitude)
+        +boolean authenticate(String password)*
+        +String toString()
+    }
+
+    class AdminUser {
+        -String role
+        +AdminUser(Long id, String name, String email, String role)
+        +String getRole()
+        +void setRole(String role)
+        +boolean authenticate(String password)
+        +String generateReport()
+        +String toString()
+    }
+
+    class ClientUser {
+        -String phoneNumber
+        +ClientUser(Long id, String name, String email, String phoneNumber)
+        +String getPhoneNumber()
+        +void setPhoneNumber(String phoneNumber)
+        +boolean authenticate(String password)
+        +void requestTaxi()
+        +String toString()
+    }
+
+    %% Clases del modelo - Jerarquía de Vehículos
+    class Vehicle {
+        <<abstract>>
+        #String id
+        #String licensePlate
+        #String brand
+        #String model
+        #int year
+        +Vehicle(String id, String licensePlate, String brand, String model, int year)
+        +String getId()
+        +void setId(String id)
+        +String getLicensePlate()
+        +void setLicensePlate(String licensePlate)
+        +String getBrand()
+        +void setBrand(String brand)
+        +String getModel()
+        +void setModel(String model)
+        +int getYear()
+        +void setYear(int year)
+        +void displayInfo()*
+        +String getVehicleType()*
+        +String toString()
+    }
+
+    class Taxi {
+        -String driverName
+        -boolean available
+        -double latitude
+        -double longitude
+        +Taxi(String id, String licensePlate, String brand, String model, int year, String driverName)
+        +String getDriverName()
+        +void setDriverName(String driverName)
+        +boolean isAvailable()
+        +void setAvailable(boolean available)
+        +double getLatitude()
+        +double getLongitude()
+        +void setLocation(double latitude, double longitude)
+        +double calculateDistance(double lat, double lon)
+        +void displayInfo()
+        +String getVehicleType()
+    }
+
+    %% Clase de relación
+    class Trajectory {
+        -String id
+        -double originLatitude
+        -double originLongitude
+        -double destinationLatitude
+        -double destinationLongitude
+        -double distance
+        -int duration
+        -Taxi taxi
+        -User user
+        +Trajectory(String id, double originLatitude, double originLongitude, double destinationLatitude, double destinationLongitude, Taxi taxi, User user)
+        +String getId()
+        +void setId(String id)
+        +double getOriginLatitude()
+        +void setOriginLatitude(double originLatitude)
+        +double getOriginLongitude()
+        +void setOriginLongitude(double originLongitude)
+        +double getDestinationLatitude()
+        +void setDestinationLatitude(double destinationLatitude)
+        +double getDestinationLongitude()
+        +void setDestinationLongitude(double destinationLongitude)
+        +double getDistance()
+        +void setDistance(double distance)
+        +int getDuration()
+        +void setDuration(int duration)
+        +Taxi getTaxi()
+        +void setTaxi(Taxi taxi)
+        +User getUser()
+        +void setUser(User user)
+        -double calculateDistance()
+        -int estimateDuration()
+        +String toString()
+    }
+
+    %% Clases de servicio
+    class TaxiService {
+        -List~Taxi~ taxis
+        +TaxiService()
+        +void registerTaxi(Taxi taxi)
+        +Taxi findNearestAvailableTaxi(double latitude, double longitude)
+        +List~Taxi~ getAvailableTaxis()
+        +List~Taxi~ getAllTaxis()
+        +boolean assignTaxi(Taxi taxi, User user)
+        +void releaseTaxi(Taxi taxi)
+    }
+
+    %% Relaciones de herencia
+    User <|-- AdminUser : extends
+    User <|-- ClientUser : extends
+    Vehicle <|-- Taxi : extends
+
+    %% Relaciones de implementación
+    IGeolocalizable <|.. User : implements
+    IGeolocalizable <|.. Taxi : implements
+
+    %% Relaciones de asociación
+    Trajectory --> Taxi : uses
+    Trajectory --> User : uses
+    TaxiService --> Taxi : manages
+    TaxiService --> User : uses
