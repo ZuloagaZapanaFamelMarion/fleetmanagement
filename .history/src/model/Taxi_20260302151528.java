@@ -1,5 +1,4 @@
 package model;
-import java.io.Serializable;
 
 /**
  * Clase que representa un taxi, hereda de Vehicle e implementa IGeolocalizable
@@ -7,8 +6,9 @@ import java.io.Serializable;
  * @author marionzuloagazapana
  */
 //implementacion de final class para evitar la herencia de la clase Taxi
-public final class Taxi extends Vehicle implements IGeolocalizable, Serializable {
-    private static final long serialVersionUID = 1L; //implementacion de serialVersionUID para serializar la clase
+public final class Taxi extends Vehicle implements IGeolocalizable {
+//implementacion de final class para evitar la herencia de la clase Taxi
+
     private String driverName;
     private boolean available;
     private double latitude;

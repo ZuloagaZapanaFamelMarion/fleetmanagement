@@ -1,11 +1,10 @@
 package model;
-import java.io.Serializable;
+
 /**
  * Clase que representa una trayectoria o ruta de un viaje
  * @author marionzuloagazapana
  */
-public class Trajectory implements Serializable {
-    private static final long serialVersionUID = 1L; //implementacion de serialVersionUID para serializar la clase
+public class Trajectory {
     
     private String id;
     private double originLatitude;

@@ -91,12 +91,13 @@ public class UserService implements Repository<User> {
      * @param email email del usuario
      * @return usuario encontrado o null si no existe
      */
-    //implementacion de stream para buscar un usuario por su email
     public User findUserByEmail(String email) {
-        return usersList.stream()
-                .filter(user -> user.getEmail().equals(email))
-                .findFirst()
-                .orElse(null);
+        for (User user : usersList) {
+            if (user.getEmail().equals(email)) {
+                return user;
+            }
+        }
+        return null;
     }
     
     /**
@@ -111,7 +112,6 @@ public class UserService implements Repository<User> {
      * Obtiene solo los usuarios clientes
      * @return lista de usuarios clientes
      */
-    //implementacion de stream para obtener los usuarios clientes
     public List<ClientUser> getClientUsers() {
         return usersList.stream()
                 .filter(user -> user instanceof ClientUser)
@@ -123,12 +123,14 @@ public class UserService implements Repository<User> {
      * Obtiene solo los usuarios administradores
      * @return lista de usuarios administradores
      */
-    //implementacion de stream para obtener los usuarios administradores
     public List<AdminUser> getAdminUsers() {
-        return usersList.stream()
-                .filter(user -> user instanceof AdminUser)
-                .map(user -> (AdminUser) user)
-                .collect(Collectors.toList());
+        List<AdminUser> admins = new ArrayList<>();
+        for (User user : usersList) {
+            if (user instanceof AdminUser) {
+                admins.add((AdminUser) user);
+            }
+        }
+        return admins;
     }
     
     /**

@@ -1,7 +1,6 @@
 package service;
 
 import model.Trajectory;
-import model.User;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -109,41 +108,30 @@ public class TrajectoryService {
     }
     
     /**
-     * Calcula la distancia total recorrida por un usuario (sobrecarga con Long).
+     * Calcula la distancia total recorrida por un usuario
      * @param userId identificador del usuario
      * @return distancia total en kilómetros
      */
+    //implementacion de stream para calcular la distancia total recorrida por un usuario
     public double getTotalDistanceByUser(Long userId) {
         return getTrajectoriesByUser(userId).stream()
                 .mapToDouble(Trajectory::getDistance)
                 .sum();
-    }
-
-    /**
-     * Calcula la distancia total recorrida por un usuario (sobrecarga con User).
-     * Mismo nombre que getTotalDistanceByUser(Long), distinta firma: sobrecarga de métodos.
-     * @param user usuario del cual se obtiene el ID
-     * @return distancia total en kilómetros, o 0.0 si user es null
-     */
-    public double getTotalDistanceByUser(User user) {
-        if (user == null || user.getId() == null) {
-            return 0.0;
-        }
-        return getTotalDistanceByUser(user.getId());
     }
     
     /**
      * Calcula la distancia total recorrida por un taxi
      * @param taxiId identificador del taxi
      * @return distancia total en kilómetros
-    */
-   //implementacion de stream para calcular la distancia total recorrida por un taxi
-   public double getTotalDistanceByTaxi(String taxiId) {
-    return getTrajectoriesByTaxi(taxiId).stream()
-            .mapToDouble(Trajectory::getDistance)
-            .sum();
-   }
-    
+     */
+    public double getTotalDistanceByTaxi(String taxiId) {
+        double total = 0.0;
+        List<Trajectory> trajectories = getTrajectoriesByTaxi(taxiId);
+        for (Trajectory trajectory : trajectories) {
+            total += trajectory.getDistance();
+        }
+        return total;
+    }
     
     /**
      * Obtiene el número total de trayectorias registradas

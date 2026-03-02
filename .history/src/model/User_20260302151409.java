@@ -1,18 +1,11 @@
 package model;
-import java.io.Serializable;
 
 /**
  * Clase abstracta que representa un usuario del sistema
- * y que además es geolocalizable e identificable.
- * 
- * Se declara como sealed para restringir las subclases permitidas.
- * También implementa Identifiable para usarla como cota en tipos genéricos.
- * 
  * @author marionzuloagazapana
  */
-//implementacion de sealed class para evitar la creacion de instancias de la clase User
-public sealed abstract class User implements IGeolocalizable, Identifiable, Serializable permits AdminUser, ClientUser {
-    private static final long serialVersionUID = 1L; //implementacion de serialVersionUID para serializar la clase
+public sealed abstract class User implements IGeolocalizable  permits AdminUser, ClientUser {
+    
     private Long id;
     private String name;
     private String email;

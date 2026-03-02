@@ -34,17 +34,6 @@ public class Main {
     // se guarda hash en BD y se maneja sesión/token.
     private static final Map<String, String> PASSWORDS_BY_EMAIL = new HashMap<>();
 
-    // Mapa de lugares en Arequipa (nombre -> lat, lon). En producción se usaría
-    // una API de geocoding (Google Maps, OpenStreetMap) para convertir dirección o búsqueda en coordenadas.
-    private static final Map<String, double[]> LUGARES_AREQUIPA = new HashMap<>();
-    static {
-        LUGARES_AREQUIPA.put("1", new double[]{-16.409047, -71.537451}); // Plaza de Armas / Centro
-        LUGARES_AREQUIPA.put("2", new double[]{-16.3932, -71.5392});    // Yanahuara
-        LUGARES_AREQUIPA.put("3", new double[]{-16.3980, -71.5340});   // Cayma
-        LUGARES_AREQUIPA.put("4", new double[]{-16.3410, -71.5830});   // Aeropuerto
-        LUGARES_AREQUIPA.put("5", new double[]{-16.4200, -71.5180});   // Sachaca
-    }
-
     public static void main(String[] args) {
         //System.out.println("=== Sistema de GestiÃ³n de Taxis - Avance 60% ===\n");
 
@@ -53,23 +42,7 @@ public class Main {
         UserService userService = new UserService();
         TrajectoryService trajectoryService = new TrajectoryService();
 
-        PersistenceService persistence = new PersistenceService();
-        File stateFile = new File("fleet_state.dat");
-
-        if (stateFile.exists()) {
-            try {
-                LoadedState state = persistence.loadState();
-                for (User u : state.getUsers()) userService.registerUser(u);
-                for (Taxi t : state.getTaxis()) taxiService.registerTaxi(t);
-                for (Trajectory tr : state.getTrajectories()) trajectoryService.createTrajectory(tr);
-                System.out.println("Estado cargado desde " + stateFile.getName());
-            } catch (IOException | ClassNotFoundException e) {
-                System.out.println("No se pudo cargar el estado. Iniciando con datos por defecto.");
-                seedData(taxiService, userService);
-            }
-        } else {
-            seedData(taxiService, userService);
-        }
+        seedData(taxiService, userService);
 
         /*
         System.out.println("=== Sistema de Gestión de Taxis (Consola) ===");
@@ -267,16 +240,6 @@ public class Main {
                 case 1 -> loginFlow(userService, taxiService, trajectoryService);
                 case 2 -> registerClientFlow(userService, taxiService);
                 case 0 -> {
-                    try {
-                        persistence.saveState(
-                                userService.getAllUsers(),
-                                taxiService.getAllTaxis(),
-                                trajectoryService.getAllTrajectories()
-                        );
-                        System.out.println("Estado guardado en fleet_state.dat");
-                    } catch (IOException e) {
-                        System.out.println("No se pudo guardar el estado: " + e.getMessage());
-                    }
                     System.out.println("Saliendo...");
                     return;
                 }
@@ -356,7 +319,7 @@ public class Main {
         ClientUser client = new ClientUser(id, name, email, phone);
 
         //  Ubicación RANDOM cerca de taxis registrados
-        double[] loc = randomNearAnyTaxi(taxiService, -16.409047, -71.537451); // Centro Arequipa
+        double[] loc = randomNearAnyTaxi(taxiService, -12.0464, -77.0428);
         client.setLocation(loc[0], loc[1]);
         System.out.printf("Ubicación asignada cerca de taxis: %.6f, %.6f%n", loc[0], loc[1]);
 
@@ -387,11 +350,10 @@ public class Main {
 
             switch (opt) {
                 case 1 -> {
-                    double[] lugar = elegirLugarArequipa("¿Dónde estás ahora? (elige zona en Arequipa)");
-                    if (lugar != null) {
-                        client.setLocation(lugar[0], lugar[1]);
-                        System.out.println("Ubicación actualizada.");
-                    }
+                    double lat = readDouble("Nueva latitud: ");
+                    double lon = readDouble("Nueva longitud: ");
+                    client.setLocation(lat, lon);
+                    System.out.println("Ubicación actualizada.");
                 }
                 case 2 -> requestTaxiFlow(client, taxiService, trajectoryService);
                 case 3 -> {
@@ -400,7 +362,7 @@ public class Main {
                     for (Trajectory t : list) System.out.println("- " + t);
                 }
                 case 4 -> {
-                    double total = trajectoryService.getTotalDistanceByUser(client); // sobrecarga: mismo método, parámetro User
+                    double total = trajectoryService.getTotalDistanceByUser(client.getId());
                     System.out.println("Distancia total: " + String.format("%.2f", total) + " km");
                 }
                 case 0 -> {
@@ -471,11 +433,8 @@ public class Main {
      */
     private static void requestTaxiFlow(ClientUser client, TaxiService taxiService, TrajectoryService trajectoryService) {
         System.out.println("\n--- PEDIR TAXI ---");
-        System.out.println("Tu ubicación actual ya está registrada.");
-        double[] destino = elegirLugarArequipa("¿A dónde vas? (elige destino en Arequipa)");
-        if (destino == null) return;
-        double destLat = destino[0];
-        double destLon = destino[1];
+        double destLat = readDouble("Latitud destino: ");
+        double destLon = readDouble("Longitud destino: ");
 
         // 1) Mostrar taxis disponibles + distancia al cliente
         List<Taxi> available = taxiService.getAvailableTaxis();
@@ -523,7 +482,7 @@ public class Main {
         );
         trajectoryService.createTrajectory(tr);
 
-        System.out.println("Taxi asignado y trayectoria creada: " + trId);
+        System.out.println("✅ Taxi asignado y trayectoria creada: " + trId);
         System.out.println("Distancia del viaje: " + String.format("%.2f", tr.getDistance())
                 + " km | Duración estimada: " + tr.getDuration() + " min");
 
@@ -554,13 +513,9 @@ public class Main {
 
         Taxi taxi = new Taxi(id, plate, brand, model, year, driver);
 
-        System.out.println("Zona inicial del taxi en Arequipa:");
-        double[] zona = elegirLugarArequipa("¿En qué zona queda el taxi?");
-        if (zona == null) {
-            System.out.println("Registro de taxi cancelado.");
-            return;
-        }
-        taxi.setLocation(zona[0], zona[1]);
+        double lat = readDouble("Latitud inicial: ");
+        double lon = readDouble("Longitud inicial: ");
+        taxi.setLocation(lat, lon);
 
         boolean ok = taxiService.registerTaxi(taxi);
         System.out.println(ok ? "Taxi registrado." : "No se pudo registrar (ID o placa duplicada).");
@@ -573,22 +528,21 @@ public class Main {
      * También se inicializan passwords para poder loguearse.
      */
     private static void seedData(TaxiService taxiService, UserService userService) {
-        // Arequipa: taxis y usuarios en zonas de la ciudad
         Taxi t1 = new Taxi("T001", "ABC-123", "Toyota", "Corolla", 2020, "Juan Pérez");
-        t1.setLocation(-16.409047, -71.537451); // Centro Arequipa
+        t1.setLocation(-12.0464, -77.0428);
 
         Taxi t2 = new Taxi("T002", "XYZ-456", "Nissan", "Sentra", 2021, "María García");
-        t2.setLocation(-16.3932, -71.5392); // Yanahuara
+        t2.setLocation(-12.0564, -77.0528);
 
         taxiService.registerTaxi(t1);
         taxiService.registerTaxi(t2);
 
         AdminUser admin = new AdminUser(99L, "Admin", "admin@taxi.com", "Super Admin");
-        admin.setLocation(-16.409047, -71.537451); // Centro
+        admin.setLocation(-12.0500, -77.0500);
         userService.registerUser(admin);
 
         ClientUser c1 = new ClientUser(1L, "Carlos López", "carlos@email.com", "987654321");
-        c1.setLocation(-16.3980, -71.5340); // Cayma
+        c1.setLocation(-12.0364, -77.0328);
         userService.registerUser(c1);
 
         // Passwords para login (DEMO)
@@ -676,29 +630,5 @@ public class Main {
                 System.out.println("Decimal inválido.");
             }
         }
-    }
-
-    /**
-     * Menú de lugares en Arequipa. En producción se usaría una API de geocoding
-     * para convertir dirección o búsqueda en coordenadas.
-     * @param titulo mensaje a mostrar (ej. "¿A dónde vas?" o "¿Dónde estás?")
-     * @return [lat, lon] del lugar elegido, o null si cancela
-     */
-    private static double[] elegirLugarArequipa(String titulo) {
-        System.out.println(titulo);
-        System.out.println("  1) Plaza de Armas / Centro");
-        System.out.println("  2) Yanahuara");
-        System.out.println("  3) Cayma");
-        System.out.println("  4) Aeropuerto");
-        System.out.println("  5) Sachaca");
-        System.out.println("  0) Cancelar");
-        String op = readString("Opción: ").trim();
-        if ("0".equals(op)) return null;
-        double[] coords = LUGARES_AREQUIPA.get(op);
-        if (coords == null) {
-            System.out.println("Opción inválida.");
-            return elegirLugarArequipa(titulo);
-        }
-        return coords;
     }
 }

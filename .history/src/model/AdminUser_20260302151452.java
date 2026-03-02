@@ -6,7 +6,6 @@ package model;
  */
 //implementacion de final class para evitar la herencia de la clase AdminUser
 public final class AdminUser extends User {
-    private static final long serialVersionUID = 1L;
     
     private String role;
     

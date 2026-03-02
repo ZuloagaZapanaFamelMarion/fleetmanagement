@@ -106,12 +106,10 @@ public class TaxiService {
      */
     public List<Taxi> getAvailableTaxis() {
         List<Taxi> available = new ArrayList<>();
-        Iterator<Taxi> iterator = taxis.iterator();
-        while (iterator.hasNext()) {
-            Taxi taxi = iterator.next();
+        for (Taxi taxi : taxis) {
             if (taxi.isAvailable()) {
                 available.add(taxi);
-            }   
+            }
         }
         return available;
     }
@@ -145,28 +143,5 @@ public class TaxiService {
      */
     public void releaseTaxi(Taxi taxi) {
         taxi.setAvailable(true);
-    }
-
-    // Métodos que aprovechan Sequenced Collections
-    /**
-     * Obtiene el primer taxi registrado según el orden de inserción.
-     * @return primer taxi o null si no hay taxis registrados
-     */
-    public Taxi getFirstRegisteredTaxi() {
-        if (taxis.isEmpty()) {
-            return null;
-        }
-        return taxis.getFirst();
-    }
-
-    /**
-     * Obtiene el último taxi registrado según el orden de inserción.
-     * @return último taxi o null si no hay taxis registrados
-     */
-    public Taxi getLastRegisteredTaxi() {
-        if (taxis.isEmpty()) {
-            return null;
-        }
-        return taxis.getLast();
     }
 }

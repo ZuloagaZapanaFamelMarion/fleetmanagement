@@ -1,12 +1,12 @@
 package model;
-
+import java.io.Serializable;
 /**
  * Clase que representa un usuario administrador del sistema
  * @author marionzuloagazapana
  */
 //implementacion de final class para evitar la herencia de la clase AdminUser
-public final class AdminUser extends User {
-    private static final long serialVersionUID = 1L;
+public final class AdminUser extends User implements Serializable permits User {
+    private static final long serialVersionUID = 1L; //implementacion de serialVersionUID para serializar la clase
     
     private String role;
     

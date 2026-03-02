@@ -10,9 +10,9 @@ import java.io.Serializable;
  * 
  * @author marionzuloagazapana
  */
-//implementacion de sealed class para evitar la creacion de instancias de la clase User
-public sealed abstract class User implements IGeolocalizable, Identifiable, Serializable permits AdminUser, ClientUser {
-    private static final long serialVersionUID = 1L; //implementacion de serialVersionUID para serializar la clase
+public sealed abstract class User implements IGeolocalizable, Identifiable
+        permits AdminUser, ClientUser {
+    
     private Long id;
     private String name;
     private String email;

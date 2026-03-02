@@ -6,8 +6,7 @@ import java.io.Serializable;
  * @author marionzuloagazapana
  */
 public sealed abstract class Vehicle implements Serializable permits Taxi {
-    private static final long serialVersionUID = 1L;
-
+//implementacion de sealed class para evitar la creacion de instancias de la clase Vehicle
     protected String id;
     protected String licensePlate;
     protected String brand;

@@ -1,9 +1,7 @@
 package model;
-import java.io.Serializable;
 
 //implementacion de final class para evitar la herencia de la clase ClientUser
-public final class ClientUser extends User implements Serializable {
-    private static final long serialVersionUID = 1L; //implementacion de serialVersionUID para serializar la clase
+public final class ClientUser extends User{
     
     private String phoneNumber;
 

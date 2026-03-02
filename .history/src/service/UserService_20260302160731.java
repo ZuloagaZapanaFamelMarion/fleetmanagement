@@ -91,12 +91,13 @@ public class UserService implements Repository<User> {
      * @param email email del usuario
      * @return usuario encontrado o null si no existe
      */
-    //implementacion de stream para buscar un usuario por su email
     public User findUserByEmail(String email) {
-        return usersList.stream()
-                .filter(user -> user.getEmail().equals(email))
-                .findFirst()
-                .orElse(null);
+        for (User user : usersList) {
+            if (user.getEmail().equals(email)) {
+                return user;
+            }
+        }
+        return null;
     }
     
     /**
