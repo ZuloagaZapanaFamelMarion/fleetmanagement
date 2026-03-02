@@ -185,7 +185,7 @@ Se incorpora un PersistenceService para permitir guardar y cargar el estado del 
 - **Ejecutar**: Desde NetBeans: Run → Run Project
 - **Limpiar**: Desde NetBeans: Build → Clean and Build Project
 
-## 📚 Próximos Pasos
+## Próximos Pasos
 
 1. Implementar las clases base con sus atributos y métodos básicos
 2. Agregar relaciones entre clases (asociaciones, herencia)
