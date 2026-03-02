@@ -7,49 +7,62 @@
 
 Diagrama UML: Sistema de Gestión de Flota de Taxis
 
-1) Visión general
-Este diagrama UML representa la arquitectura del Sistema de Gestión de Flota de Taxis. Muestra las clases principales, sus relaciones (herencia e implementación), y cómo se modela el viaje mediante una clase específica.
+Este proyecto modela un sistema de gestión de taxis aplicando Programación Orientada a Objetos. El diagrama UML se diseñó para separar claramente el modelo (clases principales del dominio), la lógica de negocio (servicios) y la persistencia (guardar/cargar datos), asegurando un diseño entendible, escalable y alineado a los pilares de POO.
 
-2) Elementos del diagrama
+1) Modelo de Usuarios
 
-Clases abstractas: Vehicle, User
-Clases concretas: Taxi, AdminUser, ClientUser
-Interfaz: IGeolocalizable
-Clase de viaje/ruta: Trajectory
+La clase User es abstracta porque representa el concepto general de usuario dentro del sistema. Contiene atributos comunes como id, name, email y ubicación (latitude, longitude). Además, define el método authenticate(String password) para que cada tipo de usuario implemente su propia validación, demostrando abstracción y polimorfismo.
 
-3) Relaciones UML clave
-Herencia (extends):
-Taxi extiende Vehicle
-AdminUser y ClientUser extienden User
-Realización (implements):
-Taxi implementa IGeolocalizable
-User implementa IGeolocalizable (y sus subclases heredan esta capacidad)
-Asociación:
-Trajectory se asocia con Taxi y con User, porque un viaje requiere un taxi asignado y un usuario solicitante.
+A partir de User se derivan:
 
-4) Responsabilidad de cada clase
-Vehicle (abstracta): define atributos comunes del vehículo y obliga a implementar displayInfo() y getVehicleType().
-Taxi: especializa Vehicle, maneja disponibilidad y ubicación (latitud/longitud) y permite calcular distancias.
-IGeolocalizable: contrato de geolocalización con getLatitude(), getLongitude() y setLocation().
-User (abstracta): centraliza datos del usuario, ubicación y define el método abstracto authenticate().
-AdminUser: usuario administrador, con autenticación más estricta y métodos de administración (por ejemplo, generar reportes).
-ClientUser: usuario cliente, con autenticación propia y métodos de uso (por ejemplo, solicitar taxi).
-Trajectory: representa el viaje, almacenando origen, destino, distancia y duración, conectando al User con el Taxi asignado.
+AdminUser: representa al administrador del sistema. Agrega role y puede generar reportes o acceder a funciones administrativas.
 
-5) Flujo típico del sistema
-1. El ClientUser solicita un taxi.
-2. El sistema compara ubicaciones porque User y Taxi cumplen IGeolocalizable.
-3. Se selecciona el taxi disponible más cercano.
-4. Se crea un objeto Trajectory con el usuario, el taxi y los datos de origen/destino; el sistema calcula distancia y duración.
+ClientUser: representa al cliente. Agrega phoneNumber y contiene acciones como solicitar taxi.
 
-6) Principios de POO reflejados
-Abstracción: Vehicle y User evitan instanciar tipos genéricos y definen contratos.
-Herencia: reutiliza atributos y comportamientos comunes en taxis y usuarios.
-Encapsulamiento: atributos privados/protected y acceso mediante getters/setters.
-Polimorfismo: authenticate() se comporta distinto en AdminUser y ClientUser.
+2) Modelo de Vehículos
 
-7) Nota de consistencia
-Si en el código los constructores de AdminUser y ClientUser reciben id, el diagrama UML debe reflejarlo para mantener consistencia entre diseño y implementación.
+La clase Vehicle es abstracta porque define lo común a cualquier vehículo: id, licensePlate, brand, model y year. Incluye métodos abstractos como displayInfo() y getVehicleType() para que las clases concretas los implementen según su tipo.
+
+De Vehicle hereda:
+
+Taxi: vehículo específico del sistema. Incluye driverName, available y ubicación del taxi. Implementa los métodos abstractos de Vehicle y añade lógica como cálculo de distancia.
+
+3) Geolocalización con Interfaz
+
+La interfaz IGeolocalizable se usa para estandarizar objetos que tienen ubicación. Define métodos como getLatitude(), getLongitude() y setLocation(lat, lon).
+En el sistema, la implementan User y Taxi, permitiendo que ambos manejen coordenadas de forma consistente.
+
+4) Trayectorias (Viajes)
+
+La clase Trajectory representa un viaje/ruta. Contiene:
+
+Coordenadas de origen y destino
+
+Valores calculados como distancia y duración estimada
+
+Asociación con un Taxi y un User
+
+Relaciones principales:
+
+Un User puede tener muchas trayectorias (historial de viajes).
+
+Un Taxi puede participar en muchas trayectorias.
+
+Cada Trajectory está asociada a 1 taxi y 1 usuario, porque un viaje específico siempre tiene un solicitante y un vehículo asignado.
+
+5) Servicios (Lógica de Negocio)
+
+Para evitar mezclar lógica con el modelo, se usan servicios que gestionan operaciones y colecciones:
+
+UserService: registra, busca y autentica usuarios. Usa estructuras como Map, Set y List para eficiencia (ej: evitar emails duplicados y buscar por id rápidamente).
+
+TaxiService: registra taxis, valida duplicados (id/placa), maneja disponibilidad y permite encontrar taxis disponibles/cercanos.
+
+TrajectoryService: crea y gestiona trayectorias, permitiendo consultas por usuario/taxi y cálculos como distancia total.
+
+6) Persistencia (Guardar/Cargar Estado)
+
+Se incorpora un PersistenceService para permitir guardar y cargar el estado del sistema. Esto hace que el sistema no sea “estático”, ya que puede persistir usuarios, taxis y trayectorias entre ejecuciones (por ejemplo, mediante serialización).
 
 ## Estructura del Proyecto
 
