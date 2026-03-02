@@ -91,7 +91,7 @@ Se incorpora un PersistenceService para permitir guardar y cargar el estado del 
 
 
 
-## 🚀 Pasos para Implementar el Proyecto
+## Pasos para Implementar el Proyecto
 
 ### Paso 1: Crear la Interfaz IGeolocalizable
 - **Ubicación**: `src/model/IGeolocalizable.java`
@@ -166,7 +166,7 @@ Se incorpora un PersistenceService para permitir guardar y cargar el estado del 
   - Diagrama de casos de uso
   - Diagrama de secuencia (opcional)
 
-## 📝 Notas Importantes
+##  Notas Importantes
 
 1. **Paquetes Java**: Asegúrate de que todas las clases tengan la declaración de paquete correcta:
    - `package model;` para clases en `/src/model/`
