@@ -2,8 +2,8 @@
 
 ## Explicación del gráfico UML
 
-<img width="10176" height="6210" alt="deepseek_mermaid_20260205_6c01c8" src="https://github.com/user-attachments/assets/e6a6b3c1-983f-41d1-a812-64010a823251" />
 
+![WhatsApp Image 2026-03-02 at 16 55 19 (1)](https://github.com/user-attachments/assets/4103d1f1-ae29-44c2-a57e-446a40f5e7e3)
 
 Diagrama UML: Sistema de Gestión de Flota de Taxis
 
