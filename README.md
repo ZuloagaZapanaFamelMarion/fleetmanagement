@@ -67,33 +67,9 @@ Se incorpora un PersistenceService para permitir guardar y cargar el estado del 
 ## Estructura del Proyecto - 100%
 
 
-fleetmanagement/
-├── src/
-│   ├── Main.java                    ← Punto de entrada, menús, flujos
-│   ├── model/                       ← Dominio
-│   │   ├── User.java                (abstract, sealed)
-│   │   ├── AdminUser.java
-│   │   ├── ClientUser.java
-│   │   ├── Vehicle.java             (abstract, sealed)
-│   │   ├── Taxi.java
-│   │   ├── Trajectory.java
-│   │   ├── IGeolocalizable.java     (interfaz)
-│   │   └── Identifiable.java        (interfaz)
-│   ├── service/                     ← Lógica de negocio
-│   │   ├── UserService.java
-│   │   ├── TaxiService.java
-│   │   ├── TrajectoryService.java
-│   │   ├── PersistenceService.java
-│   │   └── Repository.java         (interfaz genérica)
-│   └── fleetmanagement/
-│       └── Fleetmanagement.java     (clase vacía/alternativa NetBeans)
-├── diagrams/
-│   └── diagrama_clases_uml.mmd
-├── build/                           ← .class generados
-├── nbproject/                       ← Configuración NetBeans
-├── build.xml
-└── README.md
 
+
+![WhatsApp Image 2026-03-03 at 10 51 48](https://github.com/user-attachments/assets/8f54d653-6eea-427c-a9c9-9c7ef8f29ca2)
 
 
 
