@@ -64,27 +64,35 @@ TrajectoryService: crea y gestiona trayectorias, permitiendo consultas por usuar
 
 Se incorpora un PersistenceService para permitir guardar y cargar el estado del sistema. Esto hace que el sistema no sea “estático”, ya que puede persistir usuarios, taxis y trayectorias entre ejecuciones (por ejemplo, mediante serialización).
 
-## Estructura del Proyecto
+## Estructura del Proyecto - 100%
 
-```
-/proyecto-poo-taxi
-│
-├── /src
-│   ├── /model
-│   │   ├── Vehicle.java (clase abstracta o base)
-│   │   ├── Taxi.java (hereda de Vehicle)
+
+fleetmanagement/
+├── src/
+│   ├── Main.java                    ← Punto de entrada, menús, flujos
+│   ├── model/                       ← Dominio
+│   │   ├── User.java                (abstract, sealed)
+│   │   ├── AdminUser.java
+│   │   ├── ClientUser.java
+│   │   ├── Vehicle.java             (abstract, sealed)
+│   │   ├── Taxi.java
 │   │   ├── Trajectory.java
-│   │   ├── User.java
-│   │   └── IGeolocalizable.java (interfaz)
-│   │
-│   ├── /service (opcional, si quieres mostrar más estructura)
-│   └── Main.java
-│
-├── /diagrams
-│   └── (diagramas UML, casos de uso, etc.)
-│
-├── README.md
-└── build.xml (proyecto NetBeans con Ant)
+│   │   ├── IGeolocalizable.java     (interfaz)
+│   │   └── Identifiable.java        (interfaz)
+│   ├── service/                     ← Lógica de negocio
+│   │   ├── UserService.java
+│   │   ├── TaxiService.java
+│   │   ├── TrajectoryService.java
+│   │   ├── PersistenceService.java
+│   │   └── Repository.java         (interfaz genérica)
+│   └── fleetmanagement/
+│       └── Fleetmanagement.java     (clase vacía/alternativa NetBeans)
+├── diagrams/
+│   └── diagrama_clases_uml.mmd
+├── build/                           ← .class generados
+├── nbproject/                       ← Configuración NetBeans
+├── build.xml
+└── README.md
 
 
 
